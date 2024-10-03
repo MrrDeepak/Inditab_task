@@ -3,34 +3,23 @@ import 'package:inditab_task_flutter/models/user_modal.dart';
 import 'package:inditab_task_flutter/widgets/story_view/controller/story_controller.dart';
 import 'package:inditab_task_flutter/widgets/story_view/utils.dart';
 import 'package:inditab_task_flutter/widgets/story_view/widgets/story_view_widget.dart';
-import 'package:inditab_task_flutter/widgets/story_view_details.dart';
-
+import 'package:inditab_task_flutter/widgets/story_view_caption.dart';
 
 class StoryViewPage extends StatefulWidget {
   final Data user;
-  //final List<Users>? userProfile;
-  //final int initialUserIndex;
-  const StoryViewPage(
-      {
-        //required this.initialUserIndex,
-      required this.user,
-      super.key,
-      //required this.userProfile
-      });
-
+  const StoryViewPage({
+    required this.user,
+    super.key,
+  });
 
   @override
   State<StoryViewPage> createState() => _StoryViewState();
 }
 
-
 class _StoryViewState extends State<StoryViewPage> {
-  final StoryController storyController = StoryController();
-  //late PageController pageController = PageController();
+   StoryController storyController = StoryController();
 
-
-  List<StoryItem> userStory = [];
-
+  final List<StoryItem> userStory = [];
 
   void addStoryItems() {
     for (final story in widget.user.stories!) {
@@ -38,7 +27,6 @@ class _StoryViewState extends State<StoryViewPage> {
         case "video":
           userStory.add(
             StoryItem.pageVideo(
-                shown: true,
                 duration: const Duration(seconds: 10),
                 url: story.mediaUrl.toString(),
                 controller: storyController,
@@ -64,60 +52,62 @@ class _StoryViewState extends State<StoryViewPage> {
     }
   }
 
-
   @override
   void initState() {
     super.initState();
     addStoryItems();
+    storyController = StoryController();
   }
-
+  @override
+  void dispose() {
+    super.dispose();
+    storyController.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
-    return  Stack(
-          children: [
-            StoryView(
-              storyItems: userStory,
-              controller: storyController,
-              onVerticalSwipeComplete: (direction) {
-                if (direction == Direction.down) {
-                  Navigator.pop(context);
-                }
-              },
-              onComplete: () => Navigator.pop(context),
-              repeat: false,
-              inline: true,
-            ),
-            // User Profile view on Status
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 24.0),
-              child: SafeArea(
-                child: SizedBox(
-                  height: 60,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      CircleAvatar(
-                        radius: 48,
-                        backgroundImage: NetworkImage(
-                            widget.user.profilePicture.toString()),
-                      ),
-                      Material(
-                        type: MaterialType.transparency,
-                        child: Text(
-                          widget.user.userName.toString(),
-                          style: const TextStyle(color: Colors.white),
-                        ),
-                      ),
-                    ],
+    return Stack(
+      children: [
+        StoryView(
+          storyItems: userStory,
+          controller: storyController,
+          onVerticalSwipeComplete: (direction) {
+            if (direction == Direction.down) {
+              Navigator.pop(context);
+            }
+          },
+          onComplete: () => Navigator.pop(context),
+          repeat: false,
+          inline: true,
+        ),
+        // User Profile view on Status
+        Padding(
+          padding: const EdgeInsets.symmetric(vertical: 24.0),
+          child: SafeArea(
+            child: SizedBox(
+              height: 60,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  CircleAvatar(
+                    radius: 48,
+                    backgroundImage:
+                        NetworkImage(widget.user.profilePicture.toString()),
                   ),
-                ),
+                  Material(
+                    type: MaterialType.transparency,
+                    child: Text(
+                      widget.user.userName.toString(),
+                      style: const TextStyle(color: Colors.white),
+                    ),
+                  ),
+                ],
               ),
             ),
-          ],
-        );
+          ),
+        ),
+      ],
+    );
   }
 }
-
-
