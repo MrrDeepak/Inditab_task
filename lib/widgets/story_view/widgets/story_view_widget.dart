@@ -19,14 +19,6 @@ class StoryItem {
   /// Specifies how long the page should be displayed. 
   final Duration duration;
 
-  /// Has this page been shown already? This is used to indicate that the page
-  /// has been displayed. If some pages are supposed to be skipped in a story,
-  /// mark them as shown `shown = true`.
-  ///
-  /// However, during initialization of the story view, all pages after the
-  /// last unshown page will have their `shown` attribute altered to false. This
-  /// is because the next item to be displayed is taken by the last unshown
-  /// story item.
   bool shown;
 
   /// The page content
@@ -45,10 +37,6 @@ class StoryItem {
     Key? key,
     BoxFit imageFit = BoxFit.fitWidth,
     Widget? caption,
-    bool shown = false,
-    Map<String, dynamic>? requestHeaders,
-    Widget? loadingWidget,
-    Widget? errorWidget,
     EdgeInsetsGeometry? captionOuterPadding,
     Duration? duration,
   }) {
@@ -62,9 +50,6 @@ class StoryItem {
               url,
               controller: controller,
               fit: imageFit,
-              requestHeaders: requestHeaders,
-              loadingWidget: loadingWidget,
-              errorWidget: errorWidget,
             ),
             SafeArea(
               child: Align(
@@ -86,7 +71,6 @@ class StoryItem {
           ],
         ),
       ),
-      shown: shown,
       duration: duration ?? const Duration(seconds: 3),
     );
   }
@@ -102,10 +86,6 @@ class StoryItem {
     Duration? duration,
     BoxFit imageFit = BoxFit.fitWidth,
     Widget? caption,
-    bool shown = false,
-    Map<String, dynamic>? requestHeaders,
-    Widget? loadingWidget,
-    Widget? errorWidget,
   }) {
     return StoryItem(
         Container(
@@ -116,9 +96,6 @@ class StoryItem {
               StoryVideo.url(
                 url,
                 controller: controller,
-                requestHeaders: requestHeaders,
-                loadingWidget: loadingWidget,
-                errorWidget: errorWidget,
               ),
               SafeArea(
                 child: Align(
@@ -136,7 +113,6 @@ class StoryItem {
             ],
           ),
         ),
-        shown: shown,
         duration: duration ?? const Duration(seconds: 10));
   }
 
@@ -175,15 +151,15 @@ class StoryItem {
           ),
           child: Align(
             alignment: Alignment.bottomLeft,
-            child: Container(
-              child: caption == null ? SizedBox() : caption,
+            child: SizedBox(
               width: double.infinity,
+              child: caption ?? const SizedBox(),
             ),
           ),
         ),
       ),
       shown: shown,
-      duration: duration ?? Duration(seconds: 3),
+      duration: duration ?? const Duration(seconds: 3),
     );
   }
 }
@@ -199,10 +175,7 @@ class StoryView extends StatefulWidget {
   /// each time the full story completes when [repeat] is set to `true`.
   final VoidCallback? onComplete;
 
-  /// Callback for when a vertical swipe gesture is detected. If you do not
-  /// want to listen to such event, do not provide it. For instance,
-  /// for inline stories inside ListViews, it is preferrable to not to
-  /// provide this callback so as to enable scroll events on the list view.
+  /// Callback for when a vertical swipe gesture is detected. 
   final Function(Direction?)? onVerticalSwipeComplete;
 
   /// Callback for when a story and it index is currently being shown.
@@ -282,9 +255,9 @@ class StoryViewState extends State<StoryView> with TickerProviderStateMixin {
     // false
     final firstPage = widget.storyItems.firstWhereOrNull((it) => !it!.shown);
     if (firstPage == null) {
-      widget.storyItems.forEach((it2) {
+      for (var it2 in widget.storyItems) {
         it2!.shown = false;
-      });
+      }
     } else {
       final lastShownPos = widget.storyItems.indexOf(firstPage);
       widget.storyItems.sublist(lastShownPos).forEach((it) {
@@ -292,17 +265,17 @@ class StoryViewState extends State<StoryView> with TickerProviderStateMixin {
       });
     }
 
-    this._playbackSubscription =
+    _playbackSubscription =
         widget.controller.playbackNotifier.listen((playbackStatus) {
       switch (playbackStatus) {
         case PlaybackState.play:
           _removeNextHold();
-          this._animationController?.forward();
+          _animationController?.forward();
           break;
 
         case PlaybackState.pause:
           _holdNext(); // then pause animation
-          this._animationController?.stop(canceled: false);
+          _animationController?.stop(canceled: false);
           break;
 
         case PlaybackState.next:
@@ -383,9 +356,9 @@ class StoryViewState extends State<StoryView> with TickerProviderStateMixin {
     }
 
     if (widget.repeat) {
-      widget.storyItems.forEach((it) {
+      for (var it in widget.storyItems) {
         it!.shown = false;
-      });
+      }
 
       _beginPlay();
     }
@@ -394,15 +367,15 @@ class StoryViewState extends State<StoryView> with TickerProviderStateMixin {
   void _goBack() {
     _animationController!.stop();
 
-    if (this._currentStory == null) {
+    if (_currentStory == null) {
       widget.storyItems.last!.shown = false;
     }
 
-    if (this._currentStory == widget.storyItems.first) {
+    if (_currentStory == widget.storyItems.first) {
       _beginPlay();
     } else {
-      this._currentStory!.shown = false;
-      int lastPos = widget.storyItems.indexOf(this._currentStory);
+      _currentStory!.shown = false;
+      int lastPos = widget.storyItems.indexOf(_currentStory);
       final previous = widget.storyItems[lastPos - 1]!;
 
       previous.shown = false;
@@ -412,22 +385,22 @@ class StoryViewState extends State<StoryView> with TickerProviderStateMixin {
   }
 
   void _goForward() {
-    if (this._currentStory != widget.storyItems.last) {
+    if (_currentStory != widget.storyItems.last) {
       _animationController!.stop();
 
       // get last showing
-      final _last = this._currentStory;
+      final last = _currentStory;
 
-      if (_last != null) {
-        _last.shown = true;
-        if (_last != widget.storyItems.last) {
+      if (last != null) {
+        last.shown = true;
+        if (last != widget.storyItems.last) {
           _beginPlay();
         }
       }
     } else {
       // this is the last page, progress animation should skip to end
       _animationController!
-          .animateTo(1.0, duration: Duration(milliseconds: 10));
+          .animateTo(1.0, duration: const Duration(milliseconds: 10));
     }
   }
 
@@ -443,7 +416,7 @@ class StoryViewState extends State<StoryView> with TickerProviderStateMixin {
 
   void _holdNext() {
     _nextDebouncer?.cancel();
-    _nextDebouncer = Timer(Duration(milliseconds: 500), () {});
+    _nextDebouncer = Timer(const Duration(milliseconds: 500), () {});
   }
 
   @override
@@ -468,7 +441,7 @@ class StoryViewState extends State<StoryView> with TickerProviderStateMixin {
                     widget.storyItems
                         .map((it) => PageData(it!.duration, it.shown))
                         .toList(),
-                    this._currentAnimation,
+                    _currentAnimation,
                     key: UniqueKey(),
                     indicatorHeight: widget.indicatorHeight,
                     indicatorColor: widget.indicatorColor,
@@ -509,13 +482,11 @@ class StoryViewState extends State<StoryView> with TickerProviderStateMixin {
                 onVerticalDragUpdate: widget.onVerticalSwipeComplete == null
                     ? null
                     : (details) {
-                        if (verticalDragInfo == null) {
-                          verticalDragInfo = VerticalDragInfo();
-                        }
+                        verticalDragInfo ??= VerticalDragInfo();
 
                         verticalDragInfo!.update(details.primaryDelta!);
 
-                        // TODO: provide callback interface for animation purposes
+                        
                       },
                 onVerticalDragEnd: widget.onVerticalSwipeComplete == null
                     ? null
@@ -535,10 +506,10 @@ class StoryViewState extends State<StoryView> with TickerProviderStateMixin {
             alignment: Alignment.centerLeft,
             heightFactor: 1,
             child: SizedBox(
+                width: 70,
                 child: GestureDetector(onTap: () {
                   widget.controller.previous();
-                }),
-                width: 70),
+                })),
           ),
         ],
       ),
@@ -564,14 +535,14 @@ class PageBar extends StatefulWidget {
   final Color? indicatorColor;
   final Color? indicatorForegroundColor;
 
-  PageBar(
+  const PageBar(
     this.pages,
     this.animation, {
     this.indicatorHeight = IndicatorHeight.large,
     this.indicatorColor,
     this.indicatorForegroundColor,
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
   @override
   State<StatefulWidget> createState() {
@@ -612,7 +583,7 @@ class PageBarState extends State<PageBar> {
         return Expanded(
           child: Container(
             padding: EdgeInsets.only(
-                right: widget.pages.last == it ? 0 : this.spacing),
+                right: widget.pages.last == it ? 0 : spacing),
             child: StoryProgressIndicator(
               isPlaying(it) ? widget.animation!.value : (it.shown ? 1 : 0),
               indicatorHeight:
@@ -636,25 +607,26 @@ class StoryProgressIndicator extends StatelessWidget {
   final Color? indicatorColor;
   final Color? indicatorForegroundColor;
 
-  StoryProgressIndicator(
+  const StoryProgressIndicator(
     this.value, {
     this.indicatorHeight = 5,
     this.indicatorColor,
     this.indicatorForegroundColor,
+    super.key
   });
 
   @override
   Widget build(BuildContext context) {
     return CustomPaint(
       size: Size.fromHeight(
-        this.indicatorHeight,
+        indicatorHeight,
       ),
       foregroundPainter: IndicatorOval(
-        this.indicatorForegroundColor?? Colors.white.withOpacity(0.8),
-        this.value,
+        indicatorForegroundColor?? Colors.white.withOpacity(0.8),
+        value,
       ),
       painter: IndicatorOval(
-        this.indicatorColor?? Colors.white.withOpacity(0.4),
+        indicatorColor?? Colors.white.withOpacity(0.4),
         1.0,
       ),
     );
@@ -669,11 +641,11 @@ class IndicatorOval extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
-    final paint = Paint()..color = this.color;
+    final paint = Paint()..color = color;
     canvas.drawRRect(
         RRect.fromRectAndRadius(
-            Rect.fromLTWH(0, 0, size.width * this.widthFactor, size.height),
-            Radius.circular(3)),
+            Rect.fromLTWH(0, 0, size.width * widthFactor, size.height),
+            const Radius.circular(3)),
         paint);
   }
 

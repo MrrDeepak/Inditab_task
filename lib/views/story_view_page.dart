@@ -29,7 +29,7 @@ class _StoryViewState extends State<StoryViewPage> {
         case "video":
           userStory.add(
             StoryItem.pageVideo(
-                duration: const Duration(seconds: 10),
+                duration: const Duration(seconds: 15),
                 url: story.mediaUrl.toString(),
                 controller: storyController,
                 imageFit: BoxFit.contain,
@@ -66,14 +66,6 @@ class _StoryViewState extends State<StoryViewPage> {
     super.dispose();
     storyController.dispose();
   }
-
-  // void handleCompleted() {
-  //   widget.pageController.nextPage(
-  //     duration: Duration(milliseconds: 300),
-  //     curve: Curves.easeIn,
-  //   );
-  //   final currentIndex = users.
-  // }
 
   @override
   Widget build(BuildContext context) {

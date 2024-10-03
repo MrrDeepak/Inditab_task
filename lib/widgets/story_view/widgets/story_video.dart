@@ -26,8 +26,8 @@ class VideoLoader {
       onComplete();
     }
 
-    final fileStream = DefaultCacheManager().getFileStream(url,
-        headers: requestHeaders as Map<String, String>?);
+    final fileStream = DefaultCacheManager()
+        .getFileStream(url, headers: requestHeaders as Map<String, String>?);
 
     fileStream.listen((fileResponse) {
       if (fileResponse is FileInfo) {
@@ -127,7 +127,6 @@ class StoryVideoState extends State<StoryVideo> {
         ),
       );
     }
-    
 
     return widget.videoLoader.state == LoadState.loading
         ? Center(
@@ -150,7 +149,6 @@ class StoryVideoState extends State<StoryVideo> {
                   ),
                 ),
           );
-          
   }
 
   @override
