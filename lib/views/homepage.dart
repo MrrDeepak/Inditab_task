@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:inditab_task_flutter/models/user_modal.dart';
 import 'package:inditab_task_flutter/services/api_services.dart';
+import 'package:inditab_task_flutter/views/individual_user_story_page.dart';
 import 'package:inditab_task_flutter/views/story_view_page.dart';
 import 'package:inditab_task_flutter/widgets/story.dart';
 import 'package:loading_indicator/loading_indicator.dart';
@@ -13,8 +14,6 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
- 
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -53,7 +52,6 @@ class _HomePageState extends State<HomePage> {
                         scrollDirection: Axis.horizontal,
                         itemCount: snapshot.data!.data!.length,
                         itemBuilder: (context, index) {
-                          
                           return Padding(
                             padding: const EdgeInsets.symmetric(
                               horizontal: 8.0,
@@ -64,12 +62,17 @@ class _HomePageState extends State<HomePage> {
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                    builder: (context) => StoryViewPage(
+                                      builder: (context) =>
+                                          IndividualUserStoryPage(
+                                            user: snapshot.data!.data!,
+                                            initialIndex: index,
+                                          )
+                                      /*StoryViewPage(
                                       user: userData[index],
                                       //userProfile: snapshot.data!.data,
                                       //initialUserIndex: index,
-                                    ),
-                                  ),
+                                    ),*/
+                                      ),
                                 );
                               },
                               child: Story(

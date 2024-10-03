@@ -7,8 +7,10 @@ import 'package:inditab_task_flutter/widgets/story_view_caption.dart';
 
 class StoryViewPage extends StatefulWidget {
   final Data user;
+  final PageController pageController;
   const StoryViewPage({
     required this.user,
+    required this.pageController,
     super.key,
   });
 
@@ -17,7 +19,7 @@ class StoryViewPage extends StatefulWidget {
 }
 
 class _StoryViewState extends State<StoryViewPage> {
-   StoryController storyController = StoryController();
+  StoryController storyController = StoryController();
 
   final List<StoryItem> userStory = [];
 
@@ -58,11 +60,20 @@ class _StoryViewState extends State<StoryViewPage> {
     addStoryItems();
     storyController = StoryController();
   }
+
   @override
   void dispose() {
     super.dispose();
     storyController.dispose();
   }
+
+  // void handleCompleted() {
+  //   widget.pageController.nextPage(
+  //     duration: Duration(milliseconds: 300),
+  //     curve: Curves.easeIn,
+  //   );
+  //   final currentIndex = users.
+  // }
 
   @override
   Widget build(BuildContext context) {
