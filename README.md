@@ -26,7 +26,11 @@ This Flutter application replicates the Instagram-like story feature, allowing u
 - Fetches story data from an external API.
 - Displays a list of users with their profile pictures.
 - Allows users to view and interact with stories in a full-screen mode.
-- Supports navigation through stories via swipe gestures, tap, and long press.
+- Supports navigation through stories via swipe gestures like:
+  - Tap Right: To play next story.
+  - Tap Left: To play previous story.
+  - Horizontal Drag: To change user.
+  - Vertical Drag Down: To go back home. 
 - Progress indicator showing the current story's playback status.
 
 ## Dependencies
@@ -34,6 +38,7 @@ This Flutter application replicates the Instagram-like story feature, allowing u
 - **video_player** - For handling video playback.
 - **google_fonts** - For changing fontfamily.
 - **loading_indicator** - For showing loading indicator until the data is loaded.
+- **flutter_cache_manager** - For storing and retriving data in cache memory.
 
 ## Implementation Details
 1. **Data Models**: Defined classes to represent the structure of users and stories based on the API response.
@@ -66,5 +71,11 @@ This project is licensed under the MIT License. See the [LICENSE](https://openso
 
 
 # Screenshots:
+
+https://github.com/user-attachments/assets/fa9d49c2-43f1-4cda-aa78-7623f7f961aa
+
+![Screen_shot1](https://github.com/user-attachments/assets/167a62a1-1385-49a8-a462-e10e79fbe07c)
+
+![Screen_shot2](https://github.com/user-attachments/assets/2b661209-a2d6-4b77-b2e7-70a5b7df2eb6)
 
 
