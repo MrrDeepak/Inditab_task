@@ -104,12 +104,12 @@ class UserPosts extends StatelessWidget {
                       const Padding(
                           padding: EdgeInsets.all(16.0),
                           child: Text(
-                              'Enhance your Instagram with our UI Mockup Download for instagram creativity.')),
+                              'Beautiful nature with mountains, waterfall beaches and a shiny day.')),
                       // Hashtags
                       const Padding(
                         padding: EdgeInsets.symmetric(horizontal: 16.0),
                         child: Text(
-                          '#instagram #templates #beautiful #funny #dailypost',
+                          '#social #templates #beautiful #funny #dailypost',
                           style: TextStyle(
                             color: Colors.blue,
                           ),
