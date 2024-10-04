@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:inditab_task_flutter/models/user_modal.dart';
 import 'package:inditab_task_flutter/services/api_services.dart';
 import 'package:inditab_task_flutter/views/individual_user_story_page.dart';
+import 'package:inditab_task_flutter/views/user_posts.dart';
 import 'package:inditab_task_flutter/widgets/story.dart';
 import 'package:loading_indicator/loading_indicator.dart';
 
@@ -35,9 +36,13 @@ class _HomePageState extends State<HomePage> {
                   builder: (context, snapshot) {
                     if (snapshot.connectionState == ConnectionState.waiting) {
                       return const Center(
-                        child: LoadingIndicator(
-                          indicatorType: Indicator.ballClipRotateMultiple,
-                          colors: [Colors.blue],
+                        child: SizedBox(
+                          height: 70,
+                          width: 70,
+                          child: LoadingIndicator(
+                            indicatorType: Indicator.ballClipRotateMultiple,
+                            colors: [Colors.blue],
+                          ),
                         ),
                       );
                     } else if (snapshot.hasError) {
@@ -65,13 +70,7 @@ class _HomePageState extends State<HomePage> {
                                           IndividualUserStoryPage(
                                             user: snapshot.data!.data!,
                                             initialIndex: index,
-                                          )
-                                      /*StoryViewPage(
-                                      user: userData[index],
-                                      //userProfile: snapshot.data!.data,
-                                      //initialUserIndex: index,
-                                    ),*/
-                                      ),
+                                          ),),
                                 );
                               },
                               child: Story(
@@ -92,6 +91,8 @@ class _HomePageState extends State<HomePage> {
                   },
                 ),
               ),
+              //SizedBox(height: 8.0,),
+              const UserPosts()
             ],
           ),
         ));
