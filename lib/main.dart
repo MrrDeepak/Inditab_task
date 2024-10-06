@@ -18,7 +18,6 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         fontFamily: GoogleFonts.poppins().fontFamily,
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue,),
-        //useMaterial3: true,
       ),
       home: const HomePage(),
     );

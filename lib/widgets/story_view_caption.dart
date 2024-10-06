@@ -8,7 +8,7 @@ class StoryViewDetails extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.symmetric(vertical: 82.0),
+      padding: const EdgeInsets.symmetric(vertical: 82.0),
       child: Material(
         type: MaterialType.transparency,
         child: Column(

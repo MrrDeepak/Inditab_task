@@ -5,9 +5,10 @@ import 'package:inditab_task_flutter/widgets/story_view/utils.dart';
 import 'package:inditab_task_flutter/widgets/story_view/widgets/story_view_widget.dart';
 import 'package:inditab_task_flutter/widgets/story_view_caption.dart';
 
+// StoryViewPage displays a single user's stories in a swipeable format.
 class StoryViewPage extends StatefulWidget {
-  final Data user;
-  final PageController pageController;
+  final Data user; // User data containing the stories
+  final PageController pageController; // Controller for page navigation
   const StoryViewPage({
     required this.user,
     required this.pageController,
@@ -19,10 +20,13 @@ class StoryViewPage extends StatefulWidget {
 }
 
 class _StoryViewState extends State<StoryViewPage> {
-  StoryController storyController = StoryController();
+  // Controller for managing story playback
+  StoryController storyController = StoryController(); 
 
-  final List<StoryItem> userStory = [];
+  final List<StoryItem> userStory = [];  // List to hold the user's stories
 
+
+  // Method to populate userStory list based on user's stories
   void addStoryItems() {
     for (final story in widget.user.stories!) {
       switch (story.mediaType) {
@@ -71,19 +75,21 @@ class _StoryViewState extends State<StoryViewPage> {
   Widget build(BuildContext context) {
     return Stack(
       children: [
+
+        // StoryView widget to display the user's stories
         StoryView(
-          storyItems: userStory,
-          controller: storyController,
+          storyItems: userStory, // Pass the list of stories
+          controller: storyController, // Pass the story controller
           onVerticalSwipeComplete: (direction) {
             if (direction == Direction.down) {
-              Navigator.pop(context);
+              Navigator.pop(context); // Close the view on vertical down swipe
             }
           },
-          onComplete: () => Navigator.pop(context),
+          onComplete: () => Navigator.pop(context), // Close the view when stories complete
           repeat: false,
           inline: true,
         ),
-        // User Profile view on Status
+        // User Profile view on top of the stories
         Padding(
           padding: const EdgeInsets.symmetric(vertical: 24.0),
           child: SafeArea(
@@ -93,11 +99,14 @@ class _StoryViewState extends State<StoryViewPage> {
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  // User's profile picture
                   CircleAvatar(
                     radius: 48,
                     backgroundImage:
                         NetworkImage(widget.user.profilePicture.toString()),
                   ),
+
+                  // User's name displayed beside the profile picture
                   Material(
                     type: MaterialType.transparency,
                     child: Text(

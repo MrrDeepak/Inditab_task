@@ -3,6 +3,7 @@ import 'package:inditab_task_flutter/models/post_images.dart';
 import 'package:inditab_task_flutter/services/api_services.dart';
 import 'package:loading_indicator/loading_indicator.dart';
 
+// UserPosts displays a list of posts made by users.
 class UserPosts extends StatelessWidget {
   const UserPosts({super.key});
 
@@ -12,9 +13,12 @@ class UserPosts extends StatelessWidget {
     final List<String> postImageLinks = ImageModel.getImageLinks();
     return Expanded(
       child: FutureBuilder(
-        future: ApiServices.getUserData(),
+        future: ApiServices.getUserData(), // Fetch user data asynchronously
         builder: (context, snapshot) {
+          // Handle different states of the future
           if (snapshot.connectionState == ConnectionState.waiting) {
+            
+            // Show a loading indicator while waiting for data
             return const Center(
               child: SizedBox(
                 height: 70,
@@ -26,14 +30,18 @@ class UserPosts extends StatelessWidget {
               ),
             );
           } else if (snapshot.hasError) {
+            // Display an error message if the data fetch fails
             return const Center(
               child: Text('Error fetching posts'),
             );
           } else if (snapshot.hasData) {
+            // When data is available, display it in a ListView
             return ListView.builder(
-              itemCount: snapshot.data!.data!.length,
+              itemCount: snapshot.data!.data!.length, // Number of user posts
               itemBuilder: (context, index) {
-                final userData = snapshot.data!.data![index];
+                final userData = snapshot.data!.data![index]; // Get user data for current index
+                
+                // POst display in card
                 return Card(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
